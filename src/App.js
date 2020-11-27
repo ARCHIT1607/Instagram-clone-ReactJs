@@ -2,6 +2,7 @@ import { Button, Input, makeStyles, Modal } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { auth, db } from "./Firebase";
+import ImageUpload from "./ImageUpload";
 import Post from "./Post";
 
 function getModalStyle() {
@@ -57,14 +58,16 @@ function App() {
 
   useEffect(() => {
     //this is where the code runs
-    db.collection("posts").onSnapshot((snapshot) => {
-      setPosts(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          post: doc.data(),
-        }))
-      );
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            post: doc.data(),
+          }))
+        );
+      });
   }, []);
 
   const signUp = (event) => {
@@ -93,6 +96,12 @@ function App() {
 
   return (
     <div className="app">
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName} />
+      ) : (
+        <h3>Sorry you need to login to upload</h3>
+      )}
+
       <Modal
         open={open}
         onClose={() => {
