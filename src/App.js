@@ -96,12 +96,6 @@ function App() {
 
   return (
     <div className="app">
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName} />
-      ) : (
-        <h3>Sorry you need to login to upload</h3>
-      )}
-
       <Modal
         open={open}
         onClose={() => {
@@ -182,43 +176,55 @@ function App() {
           alt=""
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1-DjUJ1UJd41jhB1K_jI7jMdVNUMSwp-_1g&usqp=CAU"
         />
+        {user ? (
+          <Button
+            onClick={() => {
+              auth.signOut();
+            }}
+          >
+            Logout
+          </Button>
+        ) : (
+          <div className="app__loginContainer">
+            <Button
+              onClick={() => {
+                setOpenSignIn(true);
+              }}
+            >
+              Sign IN
+            </Button>
+            <Button
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              Sign Up
+            </Button>
+          </div>
+        )}
       </div>
 
-      {user ? (
-        <Button
-          onClick={() => {
-            auth.signOut();
-          }}
-        >
-          Logout
-        </Button>
-      ) : (
-        <div className="app__loginContainer">
-          <Button
-            onClick={() => {
-              setOpenSignIn(true);
-            }}
-          >
-            Sign IN
-          </Button>
-          <Button
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Sign Up
-          </Button>
+      <div className="app__posts">
+        <div className="app__postLeft">
+          {posts.map(({ id, post }) => (
+            <Post
+              key={id}
+              postId={id}
+              user={user}
+              imageUrl={post.imageUrl}
+              username={post.username}
+              caption={post.caption}
+            />
+          ))}
         </div>
-      )}
-
-      {posts.map(({ id, post }) => (
-        <Post
-          key={id}
-          imageUrl={post.imageUrl}
-          username={post.username}
-          caption={post.caption}
-        />
-      ))}
+        <div className="app__postRight">
+          {user?.displayName ? (
+            <ImageUpload username={user.displayName} />
+          ) : (
+            <h3>Sorry you need to login to upload</h3>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

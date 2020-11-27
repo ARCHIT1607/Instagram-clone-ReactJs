@@ -7,9 +7,14 @@
 }
 
 .app__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   background-color: white;
   padding: 10px;
   object-fit: contain;
+  display: flex;
+  justify-content: space-between;
 }
 .app__headerImage {
   height: 50px;
@@ -18,4 +23,15 @@
 .app__signup {
   display: flex;
   flex-direction: column;
+}
+
+.app__posts {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.app__postRight {
+  width: 30%;
+  padding-left: 100px;
 }
