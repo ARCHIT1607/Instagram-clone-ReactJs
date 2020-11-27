@@ -83,6 +83,10 @@ function App() {
         alert(err.message);
       });
 
+    setUsername("");
+    setEmail("");
+    setPassword("");
+
     setOpen(false);
   };
 
@@ -91,6 +95,10 @@ function App() {
     auth.signInWithEmailAndPassword(email, password).catch((err) => {
       alert(err.message);
     });
+
+    setUsername("");
+    setEmail("");
+    setPassword("");
     setOpenSignIn(false);
   };
 
@@ -139,7 +147,7 @@ function App() {
       <Modal
         open={openSignIn}
         onClose={() => {
-          openSignIn(false);
+          setOpenSignIn(false);
         }}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
