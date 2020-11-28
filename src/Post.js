@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Post.css";
 import Avatar from "@material-ui/core/Avatar";
-import { db } from "./Firebase";
+import { db, firebaseApp } from "./Firebase";
 import firebase from "firebase";
 
 function Post({ imageUrl, username, caption, postId, user }) {
@@ -32,8 +32,42 @@ function Post({ imageUrl, username, caption, postId, user }) {
       username: user.displayName,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
+
+    console.log("test comment", comment);
+    fetch("https://fcm.googleapis.com/fcm/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization:
+          "Key=AAAAyPrLtfo:APA91bEJAZnlHsqEbAHn2nUna-DJCYG_ZN1HuYJKTLxUA-EcnWmg6LG63wQdX6DDcA8uFIGvVTPZ3xpK67T28KuZYeaX3qiDfNyAfqsC0wo4mk0Pggy9sclwuKMjbixqLFvZSlc3y5v3",
+      },
+      body: JSON.stringify({
+        notification: {
+          title: user.displayName,
+          body: JSON.stringify(comment),
+          click_action: "instagram",
+        },
+        to:
+          "ewBH-xARAfnWobmb3G-ns2:APA91bHXzSl1_0--fb8F0ZkLDaQFQY5kO98y2TV6W1fH54mHCNGUE5E6RliSutZIsJD3OnA9nMM0hJQAI7IoA-pgtK_kWKfAbobodzWsSSLCAFiZR5EQf5b3EPF7S3m2KIZvzrGCPevB",
+      }),
+    });
     setComment("");
   };
+
+  // Notification setup
+
+  useEffect(() => {
+    const msg = firebaseApp.messaging();
+    msg
+      .requestPermission()
+      .then(() => {
+        return msg.getToken();
+      })
+      .then((data) => {
+        console.warn("token", data);
+      });
+  });
 
   return (
     <div className="post">
